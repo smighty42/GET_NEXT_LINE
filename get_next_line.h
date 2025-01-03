@@ -6,7 +6,7 @@
 /*   By: smayti <smayti@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 15:02:24 by smayti            #+#    #+#             */
-/*   Updated: 2024/12/27 13:24:39 by smayti           ###   ########.fr       */
+/*   Updated: 2024/12/30 13:23:03 by smayti           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define GET_NEXT_LINE_H
 
 # include <stdlib.h>
-# include <unistd.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42

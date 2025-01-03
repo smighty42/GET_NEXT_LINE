@@ -6,7 +6,7 @@
 /*   By: smayti <smayti@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 15:02:01 by smayti            #+#    #+#             */
-/*   Updated: 2024/12/26 12:36:00 by smayti           ###   ########.fr       */
+/*   Updated: 2025/01/02 12:16:02 by smayti           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 void	free_stash(char **stash)
 {
-	free(*stash);
+	if (*stash)
+		free(*stash);
 	*stash = NULL;
 }

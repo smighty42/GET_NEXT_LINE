@@ -6,11 +6,12 @@
 /*   By: smayti <smayti@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 15:02:06 by smayti            #+#    #+#             */
-/*   Updated: 2024/12/26 12:53:53 by smayti           ###   ########.fr       */
+/*   Updated: 2025/01/03 14:44:14 by smayti           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <unistd.h>
 
 static int	read_buffer(int fd, char **stash, char *buffer)
 {
@@ -32,7 +33,7 @@ static int	read_buffer(int fd, char **stash, char *buffer)
 	return (bytes);
 }
 
-static void	remove_result(char **stash)
+static int	remove_result(char **stash)
 {
 	char	*sign_newline;
 	char	*stash_temp;
@@ -43,9 +44,11 @@ static void	remove_result(char **stash)
 	if (!sign_newline)
 	{
 		free_stash(stash);
-		return ;
+		return (1);
 	}
 	stash_temp = malloc((ft_strlen(sign_newline)) * sizeof(char));
+	if (!stash_temp)
+		return (1);
 	i = 0;
 	j = ft_strlen(*stash) - ft_strlen(sign_newline) + 1;
 	while (j < ft_strlen(*stash))
@@ -54,12 +57,11 @@ static void	remove_result(char **stash)
 	free(*stash);
 	*stash = stash_temp;
 	if (**stash == 0)
-	{
 		free_stash(stash);
-	}
+	return (0);
 }
 
-static void	get_result(char **stash, char **result)
+static int	get_result(char **stash, char **result)
 {
 	char	*sign_newline;
 	size_t	len;
@@ -68,8 +70,8 @@ static void	get_result(char **stash, char **result)
 	sign_newline = ft_strchr(*stash, '\n');
 	len = ft_strlen(*stash) - ft_strlen(sign_newline) + 2;
 	*result = (char *)malloc(len * sizeof(char));
-	if (!result)
-		return ;
+	if (!(*result))
+		return (1);
 	i = 0;
 	while (i < len - 1)
 	{
@@ -77,6 +79,7 @@ static void	get_result(char **stash, char **result)
 		i++;
 	}
 	(*result)[i] = '\0';
+	return (0);
 }
 
 char	*get_next_line(int fd)
@@ -89,6 +92,8 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
+		return (NULL);
 	bytes = 1;
 	while (ft_strchr(stash, '\n') == NULL && bytes > 0)
 		bytes = read_buffer(fd, &stash, buffer);
@@ -97,7 +102,9 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (ft_strlen(stash) == 0)
 		return (NULL);
-	get_result(&stash, &result);
-	remove_result(&stash);
+	if (get_result(&stash, &result) == 1)
+		return (NULL);
+	if (remove_result(&stash) == 1)
+		return (NULL);
 	return (result);
 }
